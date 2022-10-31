@@ -10,12 +10,15 @@ function init() {
     const canvas = document.querySelector('#canvas');
     const hammerManager = new Hammer.Manager(canvas);
 
+    //const oneFingerPan = new Hammer.Pan({event: "oneFingerPan", direction: Hammer.DIRECTION_ALL, pointers: 1, threshold: 0});
     const twoFingerPan = new Hammer.Pan({event: "twoFingerPan", direction: Hammer.DIRECTION_ALL, pointers: 2, threshold: 0});
     const pinch = new Hammer.Pinch({ event: 'pinch', });
+    // hammerManager.add(oneFingerPan);
     hammerManager.add(twoFingerPan);
     hammerManager.add(pinch);
     hammerManager.add(new Hammer.Tap({ event: "doubletap", taps: 2 }));
     hammerManager.add(new Hammer.Tap({ event: "singletap" }));
+    //hammerManager.on("oneFingerPan", managePan);
     hammerManager.on("twoFingerPan pinch", (e) => {
         console.log(e);
 
@@ -28,6 +31,19 @@ function init() {
         </ul>
         <p>${JSON.stringify(e.srcEvent.offsetX)}</p>`;
     });
+
+    function managePan(e) {
+        console.log(e);
+
+        logElement.innerHTML = `Event: </br>
+        <ul>
+            <li>type: ${e.type}</li>
+            <li>Dir: ${DIRECTIONS[e.direction] || e.direction}</li>
+            <li>ΔX: ${e.deltaX} - ΔY: ${e.deltaY}</li>
+            <li>⇱ (scale): ${e.scale}</li>
+        </ul>
+        <p>${JSON.stringify(e.srcEvent.offsetX)}</p>`;
+    }
 
     hammerManager.on("singletap doubletap", (ev) => {
         console.log(ev);
